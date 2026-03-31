@@ -1,36 +1,21 @@
 import streamlit as st
-    c.rect(x, y, STRIP_W, STRIP_H)
-
-    # 2. Čiarový kód (vľavo)
-    try:
-        bc_h = STRIP_H * 0.7
-        bc = code128.Code128(text, barHeight=bc_h, barWidth=barcode_scale)
-        bc.drawOn(c, x + 5*mm, y + (STRIP_H - bc_h)/2)
-    except:
-        pass
-
-    # 3. Text (vpravo) - Rozdelenie na normálnu a TUČNÚ časť
-    # Hľadáme poslednú pomlčku
-    if '-' in text:
-        parts = text.rsplit('-', 1)
-        prefix = parts[0] + "-"
         bold_part = parts[1]
     else:
         prefix = text
         bold_part = ""
 
-    # Nastavenie pozície textu
+    # Nastavenie pozície textu (vpravo na štítku)
     text_x_base = x + 140 * mm
     text_y = y + (STRIP_H / 2) - 3*mm
 
-    # Kreslenie normálnej časti
+    # Kreslenie normálnej časti (veľkosť 18)
     c.setFont("Helvetica", 18)
     c.drawString(text_x_base, text_y, prefix)
     
-    # Výpočet šírky predchádzajúceho textu, aby sme vedeli kde začať Bold časť
+    # Výpočet šírky predchádzajúceho textu
     prefix_width = c.stringWidth(prefix, "Helvetica", 18)
     
-    # Kreslenie TUČNEJ a VÄČŠEJ časti
+    # Kreslenie TUČNEJ a VÄČŠEJ časti (veľkosť 26)
     c.setFont("Helvetica-Bold", 26)
     c.drawString(text_x_base + prefix_width + 1*mm, text_y - 1*mm, bold_part)
 
@@ -44,10 +29,8 @@ def generate_pdf(locations, barcode_scale):
             if idx >= len(locations):
                 break
             
-            # Výpočet súradníc (zhora nadol)
-            # x je 0, lebo štítok má 210mm (celá šírka A4)
+            # Súradnice zhora nadol (štítok má 210mm, celá šírka A4)
             curr_y = PAGE_H - ((r + 1) * STRIP_H)
-            
             draw_label(c, 0, curr_y, locations[idx], barcode_scale)
             idx += 1
         
@@ -59,7 +42,7 @@ def generate_pdf(locations, barcode_scale):
 
 # --- ROZHRANIE APP ---
 st.title("🏭 Generátor regálových štítkov (210 x 19.8 mm)")
-st.markdown("![Návštevy](https://hits.dwyl.com/jongens1/regalove-stitky-as.svg)")
+st.markdown("![Návštevy](https://hits.dwyl.com/jongens1/regalove-stitky-as-v2.svg)")
 
 vstup_mode = st.radio("Spôsob zadania:", ["Ručný zoznam (Enter)", "Automatický rozsah"], horizontal=True)
 
@@ -89,10 +72,9 @@ with col2:
     st.write("**Špecifikácia:**")
     st.write("- Rozmer: 210 x 19.8 mm")
     st.write("- Počet na A4: 15 ks")
-    st.write("- Posledná časť za pomlčkou bude **Tučná a väčšia**.")
 
     if st.button("🚀 Pripraviť PDF na stiahnutie", type="primary"):
-        # Ak sme v automatickom režime a zoznam je prázdny, vygenerujeme ho pred tlačou
+        # Ak sme v automatickom režime, vygenerujeme zoznam pred tlačou
         if vstup_mode == "Automatický rozsah" and not locations_to_print:
             locations_to_print = [f"{prefix}{i}" for i in range(start_n, end_n + 1)]
             
