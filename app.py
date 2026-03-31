@@ -115,7 +115,7 @@ def generate_pdf(locations, barcode_scale, barcode_offset, show_inner_box, bg_he
     return buffer
 
 # --- UI APP ---
-st.title("🎨 Regálové štítky (Dokonalé centrovanie)")
+st.title("🎨 Regálové štítky")
 st.markdown("![Návštevy](https://hits.dwyl.com/jongens1/farebne-stitky-final-v7.svg)")
 
 v_mode = st.radio("Zadanie:", ["Ručný zoznam", "Automatický rozsah"], horizontal=True)
