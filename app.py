@@ -3,7 +3,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import mm
 from reportlab.graphics.barcode import code128
-from reportlab.lib.colors import hexColor
+from reportlab.lib.colors import HexColor  # Opravené na veľké H
 import io
 import re
 
@@ -17,8 +17,8 @@ STRIP_W = 210 * mm
 ROWS_PER_PAGE = 15
 
 def draw_label(c, x, y, text, barcode_scale, barcode_offset, show_inner_box, bg_hex):
-    # Prevod HEX farby na formát pre ReportLab
-    bg_color = hexColor(bg_hex)
+    # Prevod HEX farby na formát pre ReportLab (opravená funkcia HexColor)
+    bg_color = HexColor(bg_hex)
 
     # 1. Vyplnenie pozadia štítku farbou
     c.setFillColor(bg_color)
@@ -92,7 +92,7 @@ def generate_pdf(locations, barcode_scale, barcode_offset, show_inner_box, bg_he
 
 # --- UI APP ---
 st.title("🎨 Farebné regálové štítky (210 x 19.8 mm)")
-st.markdown("![Návštevy](https://hits.dwyl.com/jongens1/farebne-stitky-as-v5.svg)")
+st.markdown("![Návštevy](https://hits.dwyl.com/jongens1/farebne-stitky-as-v6.svg)")
 
 v_mode = st.radio("Zadanie:", ["Ručný zoznam", "Automatický rozsah"], horizontal=True)
 locs = []
@@ -114,7 +114,7 @@ with c1:
 with c2:
     st.subheader("Vzhľad a Farby")
     # COLOR PICKER
-    bg_color = st.color_picker("Vyberte farbu pozadia štítku", "#33A2FF") # Predvolená modrá z obrázka
+    bg_color = st.color_picker("Vyberte farbu pozadia štítku", "#33A2FF") 
     
     b_offset = st.slider("Pozícia kódu zľava (mm):", 5, 100, 15)
     b_scale = st.slider("Hustota kódu:", 0.3, 1.2, 0.5, 0.05)
